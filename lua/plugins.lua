@@ -60,7 +60,7 @@ require("lazy").setup({
     -- "tanvirtin/monokai.nvim",
     -- "catppuccin/nvim",
     "rebelot/kanagawa.nvim",
-    -- { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+    { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
     "nvim-tree/nvim-tree.lua",
     "nvim-tree/nvim-web-devicons",
 
@@ -130,4 +130,27 @@ require("lazy").setup({
     },
 
     "challenger-deep-theme/vim",
+    
+    { 'projekt0n/github-nvim-theme', name = 'github-theme' },
+    
+    {
+        "askfiy/visual_studio_code",
+        priority = 100,
+    },
+
+    { 'Bekaboo/deadcolumn.nvim' },
+    {
+      'sainnhe/sonokai',
+      lazy = false,
+      priority = 1000,
+      config = function()
+        -- Optionally configure and load the colorscheme
+        -- directly inside the plugin declaration.
+        vim.g.sonokai_enable_italic = true
+        vim.g.sonokai_style = 'andromeda'
+      end
+    },
+
+    "Mofiqul/vscode.nvim",
 })
+

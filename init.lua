@@ -9,3 +9,5 @@ require('term')
 require('buffer-line')
 require('b-diagnostic')
 require('tscope')
+require('deadcolumn-conf')
+

@@ -32,3 +32,9 @@ vim.g.loaded_netrwPlugin = 1
 vim.opt.termguicolors = true
 
 vim.notify = require("notify")
+
+--[[
+vim.opt.list = true
+vim.opt.listchars = {space='·'}
+]]--
+

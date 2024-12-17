@@ -65,5 +65,29 @@ lspconfig.pylsp.setup({
 })
 
 lspconfig.gopls.setup({
+    cmd = {'gopls'},
+    -- for postfix snippets and analyzers
+	capabilities = capabilities,
+	settings = {
+	    gopls = {
+		    experimentalPostfixCompletions = true,
+		    analyses = {
+		        unusedparams = true,
+		        shadow = true,
+		    },
+		    staticcheck = true,
+		},
+	},
     on_attach = on_attach,
+})
+
+
+-- Run gofmt + goimports on save
+local format_sync_grp = vim.api.nvim_create_augroup("goimports", {})
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*.go",
+  callback = function()
+   require('go.format').goimports()
+  end,
+  group = format_sync_grp,
 })
