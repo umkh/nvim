@@ -32,3 +32,7 @@ vim.keymap.set('v', '>', '>gv', opts)
 
 
 vim.keymap.set('n', '<A-w>', ':w<CR>', opts)
+
+-- Visual mode uchun tab/shift-tab mapping
+vim.keymap.set('x', '<Tab>', '>gv')
+vim.keymap.set('x', '<S-Tab>', '<gv')
