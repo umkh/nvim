@@ -33,11 +33,9 @@ cmp.setup({
         -- Scroll documentation
         ['<C-b>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        
         -- Select items in menu
         ['<C-k>'] = cmp.mapping.select_prev_item(),
         ['<C-j>'] = cmp.mapping.select_next_item(),
-        
         -- Confirm selected item
         ['<CR>'] = cmp.mapping.confirm({ select = true }),
 
@@ -52,7 +50,6 @@ cmp.setup({
                 fallback()
             end
         end, { "i", "s" }), -- i - insert mode; s - select mode
-        
         ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_prev_item()

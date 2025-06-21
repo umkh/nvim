@@ -38,3 +38,5 @@ vim.opt.list = true
 vim.opt.listchars = {space='·'}
 ]]--
 
+-- insert mode underline cursor
+-- vim.opt.guicursor = "n-v-c:block,i-ci-ve:underline"

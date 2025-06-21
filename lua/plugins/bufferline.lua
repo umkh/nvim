@@ -3,7 +3,8 @@
 return {
   {
     'umkh/bufferline.nvim',
-    version = "*",
+    branch = "feat/add-current-buffer-close",
+    -- version = "*",
     dependencies = 'nvim-tree/nvim-web-devicons',
     config = function()
       require('bufferline').setup({

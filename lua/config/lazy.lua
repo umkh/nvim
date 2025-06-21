@@ -18,26 +18,21 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   -- Load plugins from the plugins directory
   { import = "plugins" },
-  
   -- Plugin spec options
   spec = {
     { import = "plugins" },
   },
-  
   -- Default plugin configuration
   defaults = {
     lazy = false,
     version = false,
   },
-  
   -- Installation settings
   install = { colorscheme = { "catppuccin", "kanagawa" } },
-  
   -- UI settings
   ui = {
     border = "rounded",
   },
-  
   -- Performance settings
   performance = {
     rtp = {
