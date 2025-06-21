@@ -9,38 +9,19 @@
 local M = {}
 
 M.setup = function()
-  require('mason').setup({
-    ui = {
-      icons = {
-        package_installed = "✓",
-        package_pending = "➜",
-        package_uninstalled = "✗"
-      }
-    }
-  })
-
-  require('mason-lspconfig').setup({
-    -- A list of servers to automatically install if they're not already installed
-    ensure_installed = { 'pylsp', 'lua_ls', 'gopls', 'golangci_lint_ls' },
-  })
-
   local lspconfig = require('lspconfig')
 
-  -- Customized on_attach function
-  -- See `:help vim.diagnostic.*` for documentation on any of the below functions
+  -- Keymaps
   local opts = { noremap = true, silent = true }
   vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
   vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
   vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
   vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 
-  -- Use an on_attach function to only map the following keys
-  -- after the language server attaches to the current buffer
+  -- On attach function
   local on_attach = function(client, bufnr)
-    -- Enable completion triggered by <c-x><c-o>
     vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-    -- See `:help vim.lsp.*` for documentation on any of the below functions
     local bufopts = { noremap = true, silent = true, buffer = bufnr }
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
@@ -61,25 +42,37 @@ M.setup = function()
     end, bufopts)
   end
 
-  -- Get capabilities from cmp_nvim_lsp
+  -- Capabilities
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   local has_cmp, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
   if has_cmp then
     capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
   end
 
-  -- Configure each language
-  -- How to add LSP for a specific language?
-  -- 1. use `:Mason` to install corresponding LSP
-  -- 2. add configuration below
-  lspconfig.pylsp.setup({
+  -- Manual LSP server setup
+  -- Lua LSP
+  lspconfig.lua_ls.setup({
     on_attach = on_attach,
     capabilities = capabilities,
+    settings = {
+      Lua = {
+        diagnostics = { 
+          globals = { "vim" } 
+        },
+        workspace = {
+          library = vim.api.nvim_get_runtime_file("", true),
+          checkThirdParty = false,
+        },
+        telemetry = { 
+          enable = false 
+        },
+      },
+    },
   })
 
+  -- Go LSP
   lspconfig.gopls.setup({
-    cmd = {'gopls'},
-    -- for postfix snippets and analyzers
+    on_attach = on_attach,
     capabilities = capabilities,
     settings = {
       gopls = {
@@ -87,40 +80,57 @@ M.setup = function()
         analyses = {
           unusedparams = true,
           shadow = true,
+          ST1000 = false, -- Disable package comment warning
         },
         staticcheck = true,
       },
     },
-    on_attach = on_attach,
   })
 
-  -- Configure lua_ls for neovim development
-  lspconfig.lua_ls.setup({
+  -- Python LSP
+  lspconfig.pylsp.setup({
     on_attach = on_attach,
     capabilities = capabilities,
     settings = {
-      Lua = {
-        diagnostics = {
-          globals = { 'vim' },
-        },
-        workspace = {
-          library = vim.api.nvim_get_runtime_file("", true),
-        },
-        telemetry = {
-          enable = false,
-        },
-      },
-    },
+      pylsp = {
+        plugins = {
+          pycodestyle = {
+            ignore = {'W391'},
+            maxLineLength = 100
+          }
+        }
+      }
+    }
   })
 
-  -- Run gofmt + goimports on save
-  local format_sync_grp = vim.api.nvim_create_augroup("goimports", {})
+  -- Autoformat on save
+  local format_augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+  
+  -- Go files
   vim.api.nvim_create_autocmd("BufWritePre", {
     pattern = "*.go",
+    group = format_augroup,
     callback = function()
-      require('go.format').goimports()
+      vim.lsp.buf.format({ async = false })
     end,
-    group = format_sync_grp,
+  })
+
+  -- Lua files
+  vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = "*.lua",
+    group = format_augroup,
+    callback = function()
+      vim.lsp.buf.format({ async = false })
+    end,
+  })
+
+  -- Python files
+  vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = "*.py",
+    group = format_augroup,
+    callback = function()
+      vim.lsp.buf.format({ async = false })
+    end,
   })
 end
 
