@@ -261,11 +261,14 @@ return {
             default_yes = false,
           },
         },
-        experimental = {
-          actions = {
-            open_file = {
-              relative_path = false,
-            },
+        actions = {
+          open_file = {
+            relative_path = false,
+            quit_on_open = false,
+          },
+          change_dir = {
+            enable = true,
+            global = false,
           },
         },
         log = {
